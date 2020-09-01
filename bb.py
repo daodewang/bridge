@@ -7,9 +7,9 @@ import json
 # erdos renyi graph
 # generate a graph which has n=20 nodes, probablity p = 0.2.
 filename = 'goodG.txt'
-flag = 0
+flag = 1
 N = 1000
-P = 0.004004
+P = 0.008008
 if flag == 0:
     print('generate a newG')
     ER = nx.random_graphs.erdos_renyi_graph(N, P)
@@ -64,8 +64,8 @@ while True:
     i = i+1
     #print(f'round{i}')
 
-print(len_of_mcc)
-print(edges)
+print(f'{len(len_of_mcc)}, {len_of_mcc}')
+print(f'{len(edges)}, {edges}')
 with open('del_eb.txt', 'w', encoding='utf-8') as f:
     json.dump(len_of_mcc, f)
 
@@ -147,10 +147,12 @@ while True:
     i = i + 1
     #print(f'round{i}')
 
-print(len_of_mcc)
-print(edges)
+print(f'{len(len_of_mcc)}, {len_of_mcc}')
+print(f'{len(edges)}, {edges}')
 with open('del_bridge.txt', 'w', encoding='utf-8') as f:
     json.dump(len_of_mcc, f)
+
+
 
 
 
