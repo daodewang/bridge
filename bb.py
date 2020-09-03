@@ -7,12 +7,15 @@ import json
 # erdos renyi graph
 # generate a graph which has n=20 nodes, probablity p = 0.2.
 filename = 'goodG.txt'
-flag = 1
+flag = 0
 N = 1000
 P = 0.008008
+n = 1000
+m = 4
 if flag == 0:
     print('generate a newG')
-    ER = nx.random_graphs.erdos_renyi_graph(N, P)
+    #ER = nx.random_graphs.erdos_renyi_graph(N, P)
+    ER = nx.random_graphs.barabasi_albert_graph(n, m)
     with open(filename, 'w', encoding='utf-8') as f:
         json.dump(json_graph.node_link_data(ER), f)
 else:
@@ -23,6 +26,7 @@ else:
     f.close()
 
 # 画图
+print(f'ER-Graph: {n}, {m}, {len(ER.edges())}')
 '''
 pos = nx.spring_layout(ER)
 nx.draw(ER, pos, with_labels=False, node_size=40)
@@ -66,16 +70,17 @@ while True:
 
 print(f'{len(len_of_mcc)}, {len_of_mcc}')
 print(f'{len(edges)}, {edges}')
-with open('del_eb.txt', 'w', encoding='utf-8') as f:
+with open('del_eb_er.txt', 'w', encoding='utf-8') as f:
     json.dump(len_of_mcc, f)
 
 
 print('-------------------------------------------------------')
 
+
 ##################################
 # 删边策略2-桥
 G = nx.Graph(ER)
-MEIQIAO = 1
+MEIQIAO = 1     #0，停止；1，只算参数；2，算介数
 sublist = []
 len_of_mcc = []
 edges = []
@@ -107,9 +112,10 @@ while True:
             # 策略1 最大连通子图没桥，游戏结束
             print('finished with big subgraph')
             break
-        else:
+        elif MEIQIAO == 1:
             # 策略2 只计算score2
             # 按下面公式找到最优桥
+            #print('策略1')
             for e in G.edges():
                 #print('here')
                 #print(e)
@@ -120,6 +126,11 @@ while True:
                 score2 = G.degree(e[0]) * G.degree(e[1]) / maxdeg / maxdeg
                 score = arg2 * score2
                 score_brs.append((e, score))
+        else:
+            # 策略三，比较介数
+            print('策略2')
+            dic = nx.algorithms.centrality.edge_betweenness_centrality(G)
+            score_brs = [(e, dic[e]) for e in dic.keys()]
     else:
         # 按下面公式找到最优桥
         for br in brs:
@@ -149,10 +160,10 @@ while True:
 
 print(f'{len(len_of_mcc)}, {len_of_mcc}')
 print(f'{len(edges)}, {edges}')
-with open('del_bridge.txt', 'w', encoding='utf-8') as f:
+with open('del_bridge_er.txt', 'w', encoding='utf-8') as f:
     json.dump(len_of_mcc, f)
 
-
+''''''
 
 
 
